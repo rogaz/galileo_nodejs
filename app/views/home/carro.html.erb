@@ -1,0 +1,34 @@
+<script src="http://192.168.1.145:81/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect("http://192.168.1.145:81");
+
+
+</script>
+
+<div class="row">
+    <button class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-5 btn btn-success" onclick="socket.emit('adelante');">
+      <i class="fa fa-arrow-circle-o-up fa-2x"></i><br/>Adelante
+    </button>
+</div>
+<br/>
+<div class="row">
+  <button class="col-xs-5 col-md-2 col-md-offset-2 btn btn-warning" onclick="socket.emit('izquierda');">
+    <i class="fa fa-arrow-circle-o-left fa-2x"></i><br/>Izquierda
+  </button>
+  <div class="col-xs-2 col-md-2 col-md-offset-1">
+    <i class="fa fa-automobile fa-2x"></i>
+  </div>
+  <button class="col-xs-5 col-md-2 col-md-offset-1 btn btn-info" onclick="socket.emit('derecha');">
+    <i class="fa fa-arrow-circle-o-right fa-2x"></i><br/>Derecha
+  </button>
+</div>
+<br/>
+<div class="row">
+    <button class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-5 btn btn-danger" onclick="socket.emit('atras');">
+      Atrás<br/><i class="fa fa-arrow-circle-o-down fa-2x"></i>
+    </button>
+</div>
+<br/>
+<div class="row">
+  <button class="col-xs-12 btn btn-danger" onclick="socket.emit('detener')">Detener</button>
+</div>

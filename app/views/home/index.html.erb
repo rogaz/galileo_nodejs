@@ -1,0 +1,29 @@
+<style>
+    .row{
+        margin: 0 40px 30px;
+    }
+</style>
+<script src="http://189.155.217.173:81/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect("http://189.155.217.173:81");
+
+    socket.on('encender', function(data){
+        $('#senal').addClass('yellow');
+    });
+
+    socket.on('apagar', function(data){
+        $('#senal').removeClass('yellow');
+    });
+</script>
+<%= image_tag 'intel-galileo.jpg', id: 'galileo-image' %>
+<h1>Señal</h1>
+<p><i id="senal" class="fa fa-lightbulb-o fa-5x"></i></p>
+<div class="row">
+  <button class="col-sm-4 col-sm-offset-1 btn btn-lg btn-primary" onclick="socket.emit('prender');">Encender!</button>
+  <button class="col-sm-4 col-sm-offset-2 btn btn-lg btn-danger"  onclick="socket.emit('apagar');">Apagar!</button>
+</div>
+<div class="row">
+  <button class="col-sm-1 col-sm-offset-2 btn btn-lg btn-success" onclick="socket.emit('speed_up');">+</button>
+  <button class="col-sm-4 col-sm-offset-1 btn btn-lg btn-warning" onclick="socket.emit('parpadear');">Parpadear!</button>
+  <button class="col-sm-1 col-sm-offset-1 btn btn-lg btn-success" onclick="socket.emit('speed_down');">-</button>
+</div>
