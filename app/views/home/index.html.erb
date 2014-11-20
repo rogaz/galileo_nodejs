@@ -3,9 +3,9 @@
         margin: 0 40px 30px;
     }
 </style>
-<script src="http://galileo_board.rubymonkeys.com/socket.io/socket.io.js"></script>
+<script src="http://rubymonkeys.com:81/socket.io/socket.io.js"></script>
 <script>
-    var socket = io.connect("http://galileo_board.rubymonkeys.com");
+    var socket = io.connect("http://rubymonkeys.com:81");
 
     socket.on('encender', function(data){
         $('#senal').addClass('yellow');
