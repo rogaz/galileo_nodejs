@@ -1,6 +1,6 @@
 <style>
     .row{
-        margin: 0 40px 30px;
+        margin-bottom: 10px;
     }
 </style>
 <script src="http://<%= @socket_ip %>:81/socket.io/socket.io.js"></script>
@@ -23,13 +23,13 @@
         <h1>Señal</h1>
         <p><i id="senal_<%= count %>" class="fa fa-lightbulb-o fa-5x"></i></p>
         <div class="row">
-          <button class="col-sm-4 col-sm-offset-1 btn btn-lg btn-primary" onclick="socket.emit('prender', <%= count %>);">Encender!</button>
-          <button class="col-sm-4 col-sm-offset-2 btn btn-lg btn-danger"  onclick="socket.emit('apagar', <%= count %>);">Apagar!</button>
+          <button class="col-xs-5 col-sm-4 col-sm-offset-1 btn btn-lg btn-primary" onclick="socket.emit('prender', <%= count %>);">Encender!</button>
+          <button class="col-xs-5 col-xs-offset-2 col-sm-4 col-sm-offset-2 btn btn-lg btn-danger"  onclick="socket.emit('apagar', <%= count %>);">Apagar!</button>
         </div>
         <div class="row">
-          <button class="col-sm-1 col-sm-offset-2 btn btn-lg btn-success" onclick="socket.emit('speed_up', <%= count %>);">+</button>
-          <button class="col-sm-4 col-sm-offset-1 btn btn-lg btn-warning" onclick="socket.emit('parpadear', <%= count %>);">Parpadear!</button>
-          <button class="col-sm-1 col-sm-offset-1 btn btn-lg btn-success" onclick="socket.emit('speed_down', <%= count %>);">-</button>
+          <button class="col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-2 btn btn-lg btn-success" onclick="socket.emit('speed_up', <%= count %>);">+</button>
+          <button class="col-xs-6 col-xs-offset-1 col-sm-4 col-sm-offset-1 btn btn-lg btn-warning" onclick="socket.emit('parpadear', <%= count %>);">Parpadear!</button>
+          <button class="col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1 btn btn-lg btn-success" onclick="socket.emit('speed_down', <%= count %>);">-</button>
         </div>
       </div>
       <% count += 1 %>
