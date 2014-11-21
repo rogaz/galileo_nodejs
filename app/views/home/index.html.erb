@@ -3,27 +3,35 @@
         margin: 0 40px 30px;
     }
 </style>
-<script src="http://rubymonkeys.com:81/socket.io/socket.io.js"></script>
+<script src="http://<%= @socket_ip %>:81/socket.io/socket.io.js"></script>
 <script>
-    var socket = io.connect("http://rubymonkeys.com:81");
+    var socket = io.connect("http://<%= @socket_ip %>:81");
 
     socket.on('encender', function(data){
-        $('#senal').addClass('yellow');
+        $('#senal_' + data).addClass('yellow');
     });
 
     socket.on('apagar', function(data){
-        $('#senal').removeClass('yellow');
+        $('#senal_' + data).removeClass('yellow');
     });
 </script>
-<%= image_tag 'intel-galileo.jpg', id: 'galileo-image' %>
-<h1>Señal</h1>
-<p><i id="senal" class="fa fa-lightbulb-o fa-5x"></i></p>
+<%#= image_tag 'intel-galileo.jpg', id: 'galileo-image' %>
 <div class="row">
-  <button class="col-sm-4 col-sm-offset-1 btn btn-lg btn-primary" onclick="socket.emit('prender');">Encender!</button>
-  <button class="col-sm-4 col-sm-offset-2 btn btn-lg btn-danger"  onclick="socket.emit('apagar');">Apagar!</button>
-</div>
-<div class="row">
-  <button class="col-sm-1 col-sm-offset-2 btn btn-lg btn-success" onclick="socket.emit('speed_up');">+</button>
-  <button class="col-sm-4 col-sm-offset-1 btn btn-lg btn-warning" onclick="socket.emit('parpadear');">Parpadear!</button>
-  <button class="col-sm-1 col-sm-offset-1 btn btn-lg btn-success" onclick="socket.emit('speed_down');">-</button>
+    <% count = 0 %>
+    <% 2.times do %>
+      <div class="col-sm-6 col-xs-12">
+        <h1>Señal</h1>
+        <p><i id="senal_<%= count %>" class="fa fa-lightbulb-o fa-5x"></i></p>
+        <div class="row">
+          <button class="col-sm-4 col-sm-offset-1 btn btn-lg btn-primary" onclick="socket.emit('prender', <%= count %>);">Encender!</button>
+          <button class="col-sm-4 col-sm-offset-2 btn btn-lg btn-danger"  onclick="socket.emit('apagar', <%= count %>);">Apagar!</button>
+        </div>
+        <div class="row">
+          <button class="col-sm-1 col-sm-offset-2 btn btn-lg btn-success" onclick="socket.emit('speed_up', <%= count %>);">+</button>
+          <button class="col-sm-4 col-sm-offset-1 btn btn-lg btn-warning" onclick="socket.emit('parpadear', <%= count %>);">Parpadear!</button>
+          <button class="col-sm-1 col-sm-offset-1 btn btn-lg btn-success" onclick="socket.emit('speed_down', <%= count %>);">-</button>
+        </div>
+      </div>
+      <% count += 1 %>
+    <% end %>
 </div>

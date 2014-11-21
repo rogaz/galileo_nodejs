@@ -1,72 +1,88 @@
-
 var io = require('socket.io').listen(81);
 var fs = require('fs');
 
-var vel = 1000;
-var stop = true;
-var vel_min = 30;
-var intervalo = 50;
+var vars = [
+    {
+        "port": 27, // maps to digital PIN7
+        "vel": 1000,
+        "stop": true,
+        "vel_min": 30,
+        "intervalo": 50,
+        "data": 0
+    },
+    {
+        "port": 19, // maps to digital PIN9
+        "vel": 1000,
+        "stop": true,
+        "vel_min": 30,
+        "intervalo": 50,
+        "data": 0
+    }
+];
 
 io.on('connection', function(socket) {
 	console.log('user connected');
+
 	socket.on('prender', function(msg) {
-		console.log('prendido!'); stop = true;
-		writeGpio(led_gpio, 1);
+		console.log('prendido!');
+        vars[msg].stop = true;
+		writeGpio(vars[msg].port, 1);
 	});
 	
-	socket.on('apagar', function(){
-		console.log('apagado!'); stop = true;
-		writeGpio(led_gpio, 0);
+	socket.on('apagar', function(msg){
+		console.log('apagado!');
+        vars[msg].stop = true;
+		writeGpio(vars[msg].port, 0);
 	});
 
-	socket.on('speed_down', function(){
-                if (vel == vel_min){
-			vel = intervalo; 
+	socket.on('speed_down', function(msg){
+        if (vars[msg].vel == vars[msg].vel_min){
+            vars[msg].vel = vars[msg].intervalo;
 		} else {
-			vel = vel + intervalo;
+            vars[msg].vel = vars[msg].vel + vars[msg].intervalo;
 		}
-                console.log('disminuye velocidad: ' + (vel));
-        });
+        console.log('disminuye velocidad: ' + (vars[msg].vel));
+    });
 	
-	socket.on('parpadear', function(){
-                console.log('parpadea!');
-		if (stop == true){
-			stop = false;
-	                parpadear();
+	socket.on('parpadear', function(msg){
+        console.log('parpadea!');
+		if (vars[msg].stop == true){
+            vars[msg].stop = false;
+	        parpadear(msg);
 		}
-        });
+    });
 
-	socket.on('speed_up', function(){
-		if (vel > intervalo){
-                	vel = vel - intervalo;
-			console.log('aumenta velocidad: ' + vel);
+	socket.on('speed_up', function(msg){
+		if (vars[msg].vel > vars[msg].intervalo){
+            vars[msg].vel = vars[msg].vel - vars[msg].intervalo;
+			console.log('aumenta velocidad: ' + vars[msg].vel);
 		}else {
-			vel = vel_min;
-			console.log('La velocidad actual es ' + vel + ', imposible disminuirla.');
+            vars[msg].vel = vars[msg].vel_min;
+			console.log('La velocidad actual es ' + vars[msg].vel + ', imposible disminuirla.');
 		}
         });
 });
 
-var data = 0;
-function parpadear(){
-	if (!stop){
+function parpadear(msg){
+	if (!vars[msg].stop){
 
 		setTimeout(function(){
-			writeGpio(led_gpio, data);
-			if (data == 0){
-				data = 1;
+			writeGpio(vars[msg].port, vars[msg].data);
+			if (vars[msg].data == 0){
+                vars[msg].data = 1;
 			} else{
-				data = 0;
+                vars[msg].data = 0;
 			}
-			if (!stop)
-				parpadear();
-		}, vel);
+			if (!vars[msg].stop)
+				parpadear(msg);
+		}, vars[msg].vel);
 	}
 }
 
 //var button_gpio = 17; // maps to digital PIN5 on the board
-var led_gpio    = 27; // maps to digital PIN7
- 
+//var foco1 = 27; // maps to digital PIN7
+//var foco2 = 28; // maps to digital PIN8
+
 var fileOptions = {encoding: 'ascii'};
  
 var exportGpio = function(gpio_nr) {
@@ -102,15 +118,29 @@ var readGpio = function(gpio_nr, callback) {
 };
  
 var writeGpio = function(gpio_nr, value) {
-  (value == 1) ? io.sockets.emit('encender') : io.sockets.emit('apagar');
+  var length = vars.length;
+  var index;
+  for(var i = 0 ; i < length ; i++){
+    if(vars[i].port == gpio_nr)
+        index = i;
+  }
+
+  (value == 1) ? io.sockets.emit('encender', index) : io.sockets.emit('apagar', index);
   fs.writeFile("/sys/class/gpio/gpio" + gpio_nr + "/value", value, fileOptions, function(err, data) {
     if (err) { console.log("Writing " + gpio_nr + " " + value); }
   });
 };
- 
-exportGpio(led_gpio);
+
+var length = vars.length;
+for(var i = 0; i < length; i++){
+    exportGpio(vars[i].port);
+    setGpioOut(vars[i].port);
+    writeGpio(vars[i].port, 0);
+}
+
+//exportGpio(foco1);
 //exportGpio(button_gpio);
  
-setGpioOut(led_gpio);
+//setGpioOut(foco2);
 //setGpioIn(button_gpio);
 
