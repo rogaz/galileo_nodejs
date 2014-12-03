@@ -1,9 +1,9 @@
 class HomeController < ApplicationController
   def index
-    @socket_ip = '192.168.1.64'
+    @socket_ip = '192.168.1.166'
   end
 
   def carro
-
+    @socket_ip = '192.168.1.166'
   end
 end
