@@ -8,7 +8,8 @@ var vars = [
         "stop": true,
         "vel_min": 30,
         "intervalo": 50,
-        "data": 0
+        "data": 0,
+        "status": 0
     },
     {
         "port": 19, // maps to digital PIN9
@@ -16,12 +17,14 @@ var vars = [
         "stop": true,
         "vel_min": 30,
         "intervalo": 50,
-        "data": 0
+        "data": 0,
+        "status": 0
     }
 ];
 
 io.on('connection', function(socket) {
 	console.log('user connected');
+    socket.emit('get_status', get_status());
 
 	socket.on('prender', function(msg) {
 		console.log('prendido!');
@@ -95,15 +98,15 @@ var setGpioDirection = function(gpio_nr, direction) {
   fs.writeFile("/sys/class/gpio/gpio" + gpio_nr + "/direction", direction, fileOptions, function (err) {
     if (err) { console.log("Could'd set gpio" + gpio_nr + " direction to " + direction + " - probably gpio not available via sysfs"); }
   });
-}
+};
  
 var setGpioIn = function(gpio_nr) {
   setGpioDirection(gpio_nr, 'in');
-}
+};
  
 var setGpioOut = function(gpio_nr) {
   setGpioDirection(gpio_nr, 'out');
-}
+};
  
 // pass callback to process data asynchroniously
 var readGpio = function(gpio_nr, callback) {
@@ -135,7 +138,11 @@ var length = vars.length;
 for(var i = 0; i < length; i++){
     exportGpio(vars[i].port);
     setGpioOut(vars[i].port);
-    writeGpio(vars[i].port, 0);
+    writeGpio(vars[i].port, vars[i].status);
+}
+
+function get_status(){
+    return vars;
 }
 
 //exportGpio(foco1);

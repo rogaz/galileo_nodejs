@@ -14,6 +14,14 @@
     socket.on('apagar', function(data){
         $('#senal_' + data).removeClass('yellow');
     });
+
+    socket.on('get_status', function(data){
+        var length = data.length;
+        for (var i = 0; i < length; i++){
+            (data[i].status == 1) ? $('#senal_' + i).addClass('yellow') : $('#senal_' + i).removeClass('yellow');
+        }
+
+    });
 </script>
 <%#= image_tag 'intel-galileo.jpg', id: 'galileo-image' %>
 <div class="row">
